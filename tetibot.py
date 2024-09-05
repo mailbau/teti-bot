@@ -24,7 +24,6 @@ def beasiswa():
     url = "https://sarjana.jteti.ugm.ac.id/kemahasiswaan/peluang-mahasiswa/beasiswa/"
     webbrowser.open(url)
 
-# Sample course data
 courses = {
     "electrical engineering": [
         "Circuit Theory",
@@ -64,6 +63,11 @@ patterns = [
     (r'.*(curriculum.*electrical.*engineering|electrical.*engineering.*curriculum).*', [curriculum_te]),
     (r'.*(curriculum.*information.*engineering|information.*engineering.*curriculum).*', [curriculum_ti]),
     (r'.*(curriculum.*biomedical.*engineering|biomedical.*engineering.*curriculum).*', [curriculum_tb]),
+
+    (r'.*(academic.*document|document.*academic).*', [academic_documents]),
+    (r'.*(scholarship.*available).*', ["Beasiswa Bayan Peduli 2023", "Beasiswa Chandra Asri 2024", "Beasiswa Paragon 2024"]),
+    (r'.*(scholarship.*web|web.*scholarship).*', [beasiswa]),
+    (r'.*(contact.*university|university.*contact|how.*contact).*', ["You can reach the university at +62-123-4567", "You can email us at teti@ugm.ac.id"]),
 
     (r'^(hey|hello|hi).*', ["Hi there! How may I help you?", "Hey, how can TETI-BOT help you?"]),
     (r'.*(thanks|thank).*', ["You're welcome! Anything else?", "Happy to help! Anything else?", "My pleasure, anything else?"]),
