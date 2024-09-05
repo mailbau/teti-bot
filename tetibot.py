@@ -1,10 +1,12 @@
 import webbrowser
 import re
 import threading
+import random
 
 def curriculum_te():
     url = "https://sarjana.jteti.ugm.ac.id/program-sarjana/program-studi-teknik-elektro/kurikulum-2021/"
     webbrowser.open(url)
+    return None
 
 def curriculum_ti():
     url = "https://sarjana.jteti.ugm.ac.id/program-sarjana/program-studi-teknologi-informasi/kurikulum-2021/"
@@ -24,35 +26,48 @@ def beasiswa():
 
 # Sample course data
 courses = {
-    "electrical engineering": {
-        1: ["Introduction to Electrical Engineering", "Calculus I", "Physics I", "Programming Basics"],
-        2: ["Circuit Theory", "Calculus II", "Physics II", "Digital Systems"],
-        # Add more semesters as needed...
-    },
-    "information engineering": {
-        1: ["Introduction to Information Engineering", "Discrete Mathematics", "Introduction to Programming", "Linear Algebra"],
-        2: ["Data Structures", "Computer Organization", "Probability and Statistics", "Calculus II"],
-        # Add more semesters as needed...
-    },
-    "biomedical engineering": {
-        1: ["Introduction to Biomedical Engineering", "Biology I", "Chemistry I", "Calculus I"],
-        2: ["Anatomy and Physiology", "Biomaterials", "Physics for Engineers", "Biostatistics"],
-        # Add more semesters as needed...
-    },
+    "electrical engineering": [
+        "Circuit Theory",
+        "Electromagnetics",
+        "Power Systems",
+        "Control Systems",
+        "Signal Processing"
+    ],
+    "information engineering": [
+        "Data Structures",
+        "Algorithms",
+        "Operating Systems",
+        "Database Systems",
+        "Computer Networks"
+    ],
+    "biomedical engineering": [
+        "Anatomy and Physiology",
+        "Biomaterials",
+        "Biomedical Signal Processing",
+        "Medical Imaging",
+        "Biostatistics"
+    ],
 }
 
 
 def get_courses(major, semester):
     major = major.lower()
     semester = int(semester)
-    if major in courses and semester in courses[major]:
-        return courses[major][semester]
+    if major in courses:
+        return courses[major]
     else:
-        return ["Sorry, I don't have information for that semester or major."]
+        return ["Sorry, I don't have information for that major."]
 
 patterns = [
-    (r'(?=.*\bcourse\b)(?=.*\bsemester\s*(\d+))(?=.*\b(electrical engineering|information engineering|biomedical engineering)\b).*', 
-     lambda match: get_courses(match.group(2), match.group(1))),
+    (r'(?=.*\bcourses?\b)(?=.*\b(electrical engineering|information engineering|biomedical engineering)\b).*', 
+     lambda match: get_courses(match.group(2))),
+    (r'.*(curriculum.*electrical.*engineering|electrical.*engineering.*curriculum).*', [curriculum_te]),
+    (r'.*(curriculum.*information.*engineering|information.*engineering.*curriculum).*', [curriculum_ti]),
+    (r'.*(curriculum.*biomedical.*engineering|biomedical.*engineering.*curriculum).*', [curriculum_tb]),
+
+    (r'^(hey|hello|hi).*', ["Hello, how may I help you?", "Hey, how can TETI-BOT help you?"]),
+    (r'.*(thanks|thank).*', ["You're welcome! Anything else?", "Happy to help! Anything else?", "My pleasure, anything else?"]),
+    (r'.*', ["I'm sorry, I don't understand.", "Can you provide more information?", "I'm not sure I understand.", "Can you elaborate on that?"]),
 ]
 
 def chatbot_response(user):
@@ -67,6 +82,7 @@ def chatbot_response(user):
                 return []
             else:
                 return response
+    return None
             
 def start_chat():
     print("Welcome to TETI-BOT")
@@ -81,11 +97,8 @@ def loop_chat():
             break
         response = chatbot_response(user)
         if response:
-            if isinstance(response, list):
-                print("TETI-BOT:", "\n".join(response))
-            else:
-                print("TETI-BOT:", response)
+            print("TETI-BOT:", random.choice(response))
         else:
-            print("TETI-BOT: I'm not sure how to respond to that. Can you be more specific?")
+            print("TETI-BOT: I'm opening the web page for you.")
 
 loop_chat()
