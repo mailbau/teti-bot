@@ -2,6 +2,12 @@ import webbrowser
 import re
 import threading
 import random
+import os
+from dotenv import load_dotenv
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+
+load_dotenv()
+TELEGRAM_API_KEY = os.getenv("TELEGRAM_API_KEY")
 
 def curriculum_te():
     url = "https://sarjana.jteti.ugm.ac.id/program-sarjana/program-studi-teknik-elektro/kurikulum-2021/"
@@ -89,21 +95,32 @@ def chatbot_response(user):
                 return response
     return None
             
-def start_chat():
-    print("Welcome to TETI-BOT")
-    print("Type 'exit' to stop the conversation.")
+# Telegram message handler
+def handle_message(update, context):
+    user_input = update.message.text.lower()
+    response = chatbot_response(user_input)
+    if response:
+        update.message.reply_text(response)
+    else:
+        update.message.reply_text("I'm opening the web page for you.")
 
-def loop_chat():
-    start_chat()
-    while True:
-        user = input("You: ").lower()
-        if user in ['exit', 'no', 'no thanks']:
-            print("TETI-BOT: Goodbye! Feel free to ask anytime.")
-            break
-        response = chatbot_response(user)
-        if response:
-            print("TETI-BOT:", random.choice(response))
-        else:
-            print("TETI-BOT: I'm opening the web page for you.")
+def start(update, context):
+    update.message.reply_text("Welcome to TETI-BOT! How can I assist you?")
 
-loop_chat()
+def main():
+    updater = Updater(TELEGRAM_API_KEY, use_context=True)
+
+    dp = updater.dispatcher
+
+    # Command handler for /start
+    dp.add_handler(CommandHandler("start", start))
+
+    # Message handler for regular messages
+    dp.add_handler(MessageHandler(Filters.text & ~Filters.command, handle_message))
+
+    # Start the Bot
+    updater.start_polling()
+    updater.idle()
+
+if __name__ == '__main__':
+    main()
