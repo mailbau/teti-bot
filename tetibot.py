@@ -1,6 +1,10 @@
+# Muhammad Ismail Azmi
+# 21/473264/TK/52149
+
+#TETI-BOT: Chatbot for TETI
+
 import webbrowser
 import re
-import threading
 import random
 import os
 from dotenv import load_dotenv
@@ -73,7 +77,7 @@ patterns = [
     (r'.*(scholarship.*available).*', ["Beasiswa Bayan Peduli 2023", "Beasiswa Chandra Asri 2024", "Beasiswa Paragon 2024"]),
     (r'.*(scholarship.*web|web.*scholarship).*', [beasiswa]),
     (r'.*(internship.*opportunity|internship.*opportunities).*', ["Internship at PT. Telkom Indonesia", "Internship at PT. Astra International", "Internship at PT. Pertamina"]),
-    (r'.*(internship.*web|web.*internship).*', ["hhttps://sarjana.jteti.ugm.ac.id/kemahasiswaan/peluang-mahasiswa/kerja-praktik-internship/"]),
+    (r'.*(internship.*web|web.*internship).*', ["https://sarjana.jteti.ugm.ac.id/kemahasiswaan/peluang-mahasiswa/kerja-praktik-internship/"]),
     (r'.*(contact.*university|university.*contact|how.*contact).*', ["You can reach the university at +62-123-4567", "You can email us at teti@ugm.ac.id"]),
 
     (r'^(hey|hello|hi).*', ["Hi there! How may I help you?", "Hey, how can TETI-BOT help you?"]),
@@ -81,19 +85,16 @@ patterns = [
     (r'.*', ["I'm sorry, I don't understand.", "Can you provide more information?", "I'm not sure I understand.", "Can you elaborate on that?"]),
 ]
 
-def chatbot_response(user):
+def chatbot_response(user_input):
     for pattern, response in patterns:
-        match = re.search(pattern, user, re.IGNORECASE)
+        match = re.search(pattern, user_input, re.IGNORECASE)
         if match:
-            if callable(response):
-                return response(match)
-            elif callable(response[0]):
-                thread = threading.Thread(target=response[0])
-                thread.start()
-                return []
+            if callable(response[0]):
+                return response[0]()  # If the response is a function, call it.
             else:
-                return response
+                return random.choice(response) 
     return None
+
             
 # Telegram message handler
 def handle_message(update, context):
