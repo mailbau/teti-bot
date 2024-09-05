@@ -49,23 +49,23 @@ courses = {
     ],
 }
 
-
-def get_courses(major, semester):
+def get_courses(major):
     major = major.lower()
-    semester = int(semester)
     if major in courses:
-        return courses[major]
+        return f"The important courses in {major.title()} are:\n" + "\n".join(courses[major])
     else:
-        return ["Sorry, I don't have information for that major."]
+        return "Sorry, I don't have information for that major."
 
 patterns = [
-    (r'(?=.*\bcourses?\b)(?=.*\b(electrical engineering|information engineering|biomedical engineering)\b).*', 
-     lambda match: get_courses(match.group(2))),
+    (r'.*(course.*electrical.*engineering|electrical.*engineering.*course).*', [get_courses("electrical engineering")]),
+    (r'.*(course.*information.*engineering|information.*engineering.*course).*', [get_courses("information engineering")]),
+    (r'.*(course.*biomedical.*engineering|biomedical.*engineering.*course).*', [get_courses("biomedical engineering")]),
+
     (r'.*(curriculum.*electrical.*engineering|electrical.*engineering.*curriculum).*', [curriculum_te]),
     (r'.*(curriculum.*information.*engineering|information.*engineering.*curriculum).*', [curriculum_ti]),
     (r'.*(curriculum.*biomedical.*engineering|biomedical.*engineering.*curriculum).*', [curriculum_tb]),
 
-    (r'^(hey|hello|hi).*', ["Hello, how may I help you?", "Hey, how can TETI-BOT help you?"]),
+    (r'^(hey|hello|hi).*', ["Hi there! How may I help you?", "Hey, how can TETI-BOT help you?"]),
     (r'.*(thanks|thank).*', ["You're welcome! Anything else?", "Happy to help! Anything else?", "My pleasure, anything else?"]),
     (r'.*', ["I'm sorry, I don't understand.", "Can you provide more information?", "I'm not sure I understand.", "Can you elaborate on that?"]),
 ]
