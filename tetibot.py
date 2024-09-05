@@ -6,7 +6,6 @@ import random
 def curriculum_te():
     url = "https://sarjana.jteti.ugm.ac.id/program-sarjana/program-studi-teknik-elektro/kurikulum-2021/"
     webbrowser.open(url)
-    return None
 
 def curriculum_ti():
     url = "https://sarjana.jteti.ugm.ac.id/program-sarjana/program-studi-teknologi-informasi/kurikulum-2021/"
@@ -67,6 +66,8 @@ patterns = [
     (r'.*(academic.*document|document.*academic).*', [academic_documents]),
     (r'.*(scholarship.*available).*', ["Beasiswa Bayan Peduli 2023", "Beasiswa Chandra Asri 2024", "Beasiswa Paragon 2024"]),
     (r'.*(scholarship.*web|web.*scholarship).*', [beasiswa]),
+    (r'.*(internship.*opportunity|internship.*opportunities).*', ["Internship at PT. Telkom Indonesia", "Internship at PT. Astra International", "Internship at PT. Pertamina"]),
+    (r'.*(internship.*web|web.*internship).*', ["hhttps://sarjana.jteti.ugm.ac.id/kemahasiswaan/peluang-mahasiswa/kerja-praktik-internship/"]),
     (r'.*(contact.*university|university.*contact|how.*contact).*', ["You can reach the university at +62-123-4567", "You can email us at teti@ugm.ac.id"]),
 
     (r'^(hey|hello|hi).*', ["Hi there! How may I help you?", "Hey, how can TETI-BOT help you?"]),
